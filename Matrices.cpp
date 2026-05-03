@@ -31,7 +31,7 @@ int main() {
 
     srand(time(NULL));
 
-    int A[500][500], B[500][500], C[500][500];
+    static int A[500][500], B[500][500], C[500][500]; //se guarda en el data segment
 
     for (int n = 20; n <= 300; n += 10) {
         llenar_matrices(A, B, n);
