@@ -33,13 +33,14 @@ int main() {
 
     static int A[500][500], B[500][500], C[500][500]; //se guarda en el data segment
 
+    cout << "n" << "\t" << "tiempo_us" << endl;
     for (int n = 20; n <= 300; n += 10) {
         llenar_matrices(A, B, n);
         auto inicio = high_resolution_clock::now();
         multi_matriz_cuadrada(A, B, C, n);
         auto fin = high_resolution_clock::now();
         auto duracion = duration_cast<microseconds>(fin - inicio);
-        cout << "Tiempo: " << duracion.count() << " microsegundos\n";
+        cout << n << "\t" << duracion.count() << endl;
     }
 
     return 0;
