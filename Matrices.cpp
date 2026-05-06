@@ -179,6 +179,8 @@ int main() {
     // Para Strassen necesito el tipo Matriz
     static Matriz A_m, B_m, C_strassen;
 
+    const int REPETICIONES = 5;
+
     cout << "n" << "\t" << "clasico_us" << "\t" << "strassen_us" << endl;
 
     // Solo potencias de 2 (Strassen lo requiere)
@@ -193,19 +195,27 @@ int main() {
                 B_m[i][j] = B[i][j];
             }
 
-        // Clasico - con mis arrays de siempre
-        auto inicio = high_resolution_clock::now();
-        multi_matriz_cuadrada(A, B, C, n);
-        auto fin = high_resolution_clock::now();
-        auto duracion = duration_cast<microseconds>(fin - inicio);
+        // Repetir mediciones sin volver a generar las matrices
+        long long acum_clasico  = 0;
+        long long acum_strassen = 0;
 
-        // Strassen - con los mismos datos copiados a Matriz
-        auto inicio2 = high_resolution_clock::now();
-        strassen(A_m, B_m, C_strassen, n);
-        auto fin2 = high_resolution_clock::now();
-        auto duracion_strassen = duration_cast<microseconds>(fin2 - inicio2);
+        for (int rep = 0; rep < REPETICIONES; rep++) {
 
-        cout << n << "\t" << duracion.count() << "\t" << duracion_strassen.count() << endl;
+            // Clasico - con mis arrays de siempre
+            auto inicio = high_resolution_clock::now();
+            multi_matriz_cuadrada(A, B, C, n);
+            auto fin = high_resolution_clock::now();
+            acum_clasico += duration_cast<microseconds>(fin - inicio).count();
+
+            // Strassen - con los mismos datos copiados a Matriz
+            auto inicio2 = high_resolution_clock::now();
+            strassen(A_m, B_m, C_strassen, n);
+            auto fin2 = high_resolution_clock::now();
+            acum_strassen += duration_cast<microseconds>(fin2 - inicio2).count();
+        }
+
+        cout << n << "\t" << acum_clasico / REPETICIONES << "\t" << acum_strassen / REPETICIONES << endl;
     }
+
     return 0;
 }
